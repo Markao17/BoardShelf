@@ -9,6 +9,6 @@ export const routes: Routes = [
   { path: '', component: Landing },
   { path: 'library', component: Library },
   { path: 'game-picker', component: GamePicker },
-  { path: 'game-detail', component: GameDetail },
+  { path: 'game/:id', component: GameDetail },
   { path: 'add-game', component: AddGame },
 ];

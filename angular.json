@@ -3,9 +3,7 @@
   "version": 1,
   "cli": {
     "packageManager": "npm",
-    "schematicCollections": [
-      "angular-eslint"
-    ]
+    "schematicCollections": ["angular-eslint"]
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -33,6 +31,10 @@
               }
             ],
             "styles": [
+              "src/app/assets/styles/_variables.scss",
+              "src/app/assets/styles/_mixins.scss",
+              "src/app/assets/styles/_typography.scss",
+              "src/app/assets/styles/_reset.scss",
               "src/styles.scss"
             ]
           },
@@ -78,10 +80,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
-            ]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         }
       }
