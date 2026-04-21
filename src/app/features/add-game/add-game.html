@@ -1,1 +1,38 @@
-<p>add-game works!</p>
+<form [formGroup]="gameForm" (ngSubmit)="handleSubmit()">
+  <input type="text" formControlName="name" name="name" placeholder="Game name" />
+  <input type="number" formControlName="minPlayers" name="minPlayers" placeholder="Min players" />
+  <input type="number" formControlName="maxPlayers" name="maxPlayers" placeholder="Max players" />
+  <input
+    type="number"
+    formControlName="avgDurationMinutes"
+    name="avgDurationMinutes"
+    placeholder="Average duration in minutes"
+  />
+  <input type="text" formControlName="categories" placeholder="Ex: Strategy, Family, Party" />
+  <select formControlName="mode" name="mode">
+    <option value="pvp">PVP</option>
+    <option value="coop">Co-op</option>
+    <option value="both">Both</option>
+  </select>
+  <select formControlName="complexity" name="complexity">
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+  </select>
+  @if (gameForm.valid) {
+    <button type="submit" [disabled]="!gameForm.valid">Submit</button>
+  }
+
+  @if (gameForm.invalid) {
+    @if (gameForm.errors?.['required']) {
+      <p>Erro, por favor, preencha todos os campos obrigatórios.</p>
+    }
+  }
+
+  @if (submitted()) {
+    <p>Jogo adicionado com sucesso!</p>
+    <p>Redirecionando para a biblioteca...</p>
+  }
+</form>
