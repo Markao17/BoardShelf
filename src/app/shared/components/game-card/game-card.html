@@ -1,0 +1,10 @@
+<p>name: {{ game().name }}</p>
+<p>minPlayers: {{ game().minPlayers }}</p>
+<p>maxPlayers: {{ game().maxPlayers }}</p>
+<p>avgDurationMinutes: {{ game().avgDurationMinutes }}</p>
+<p>categories: {{ game().categories.join(', ') }}</p>
+<p>mode: {{ game().mode }}</p>
+<p>complexity: {{ game().complexity }}</p>
+<p>bggId: {{ game().bggId }}</p>
+<p>notes: {{ game().notes }}</p>
+<button (click)="deleteGame(game().id)">Delete</button>

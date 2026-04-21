@@ -1,9 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { GameService } from '../../core/services/game.service';
+import { GameCard } from '../../shared/components/game-card/game-card';
 
 @Component({
   selector: 'app-library',
-  imports: [],
+  imports: [GameCard],
   templateUrl: './library.html',
   styleUrl: './library.scss',
 })
@@ -15,8 +16,6 @@ export class Library {
   total = this.gameService.totalGames;
 
   deleteGame(id: string) {
-    if (confirm('Are you sure you want to delete this game?')) {
-      this.gameService.deleteGame(id);
-    }
+    this.gameService.deleteGame(id);
   }
 }
