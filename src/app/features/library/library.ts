@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { GameService } from '../../core/services/game.service';
 import { GameCard } from '../../shared/components/game-card/game-card';
+import { Sidebar } from '../../shared/components/sidebar/sidebar';
 
 @Component({
   selector: 'app-library',
-  imports: [GameCard],
+  imports: [GameCard, Sidebar],
   templateUrl: './library.html',
   styleUrl: './library.scss',
 })

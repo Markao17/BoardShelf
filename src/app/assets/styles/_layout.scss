@@ -1,0 +1,23 @@
+.container {
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: 100dvh;
+  width: 100%;
+}
+
+.container--has-sidebar {
+  column-gap: clamp(0.75rem, 1vw, 1.25rem);
+  grid-template-columns: minmax(12rem, clamp(14rem, 22vw, 16rem)) minmax(0, 1fr);
+}
+
+@media (max-width: 64rem) {
+  .container--has-sidebar {
+    grid-template-columns: minmax(10rem, clamp(11rem, 28vw, 14rem)) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 48rem) {
+  .container--has-sidebar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

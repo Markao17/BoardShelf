@@ -7,4 +7,5 @@
 <p>complexity: {{ game().complexity }}</p>
 <p>bggId: {{ game().bggId }}</p>
 <p>notes: {{ game().notes }}</p>
+<a [routerLink]="['/game', game().id]">View</a>
 <button (click)="deleteGame(game().id)">Delete</button>

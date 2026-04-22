@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, input, computed, inject } from '@angular/core';
+import { GameService } from '../../core/services/game.service';
 
 @Component({
   selector: 'app-game-detail',
@@ -7,5 +8,8 @@ import { Component } from '@angular/core';
   styleUrl: './game-detail.scss',
 })
 export class GameDetail {
+  private gameService = inject(GameService);
+  id = input.required<string>();
 
+  game = computed(() => this.gameService.getGameById(this.id()));
 }

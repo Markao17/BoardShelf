@@ -11,9 +11,13 @@ body {
   min-height: 100%;
 }
 
+html {
+  font-family: var(--font-primary);
+}
+
 body {
-  background: var(--neutral-color);
-  color: var(--white-color);
+  background: var(--background-color);
+  color: var(--text-color);
   line-height: 1.5;
   text-rendering: optimizeLegibility;
 }

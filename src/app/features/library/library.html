@@ -1,9 +1,13 @@
-<h1>Library</h1>
-<p>Total games: {{ total() }}</p>
-<ul>
-  @for (game of games(); track game.id) {
-    <li>
-      <app-game-card [game]="game" (deleteRequest)="deleteGame($event)"></app-game-card>
-    </li>
-  }
-</ul>
+<div class="container container--has-sidebar">
+  <app-sidebar title="Library"></app-sidebar>
+  <div class="library-content">
+    <p>Total games: {{ total() }}</p>
+    <ul>
+      @for (game of games(); track game.id) {
+        <li>
+          <app-game-card [game]="game" (deleteRequest)="deleteGame($event)"></app-game-card>
+        </li>
+      }
+    </ul>
+  </div>
+</div>

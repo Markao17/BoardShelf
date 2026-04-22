@@ -1,0 +1,26 @@
+<div class="sidebar-header">
+  <h2>{{ title() }}</h2>
+</div>
+<div class="sidebar-content">
+  <ul class="sidebar__navigation">
+    @for (item of navigation; track item.label) {
+      <li class="sidebar__navigation-item">
+        <a
+          [routerLink]="item.link"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="sidebar__navigation-link"
+        >
+          <picture class="sidebar__navigation-icon">
+            <source
+              [srcset]="item.icon + '_40x40.webp, ' + item.icon + '_80x80.webp 2x'"
+              type="image/webp"
+            />
+            <img [src]="item.icon + '_40x40.webp'" [alt]="item.label" width="20" height="20" />
+          </picture>
+          <span class="sidebar__navigation-text">{{ item.label }}</span>
+        </a>
+      </li>
+    }
+  </ul>
+</div>
