@@ -1,32 +1,57 @@
 // src/app/core/services/game.service.ts
 import { Injectable, signal, computed } from '@angular/core';
 import { Game } from '../models/game.model';
+import { db } from '../firebase.config';
+import {
+  collection,
+  addDoc,
+  onSnapshot,
+  deleteDoc,
+  doc,
+  updateDoc,
+  query,
+  orderBy,
+} from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GameService {
-  // ── Private state ──────────────────────────────────────────────────────
-  // Signal with the list of games — loads from LocalStorage on startup
-  private _games = signal<Game[]>(this.loadFromStorage());
-
-  // ── Public state (read-only) ─────────────────────────────────────────────
-  // Components can access these, but cannot change them directly
+  private _games = signal<Game[]>([]);
   readonly games = this._games.asReadonly();
-
   readonly totalGames = computed(() => this._games().length);
 
+  private gamesCollection = collection(db, 'games');
+
+  constructor() {
+    this.listenToGames();
+  }
+
+  private listenToGames() {
+    // Order by addedAt
+    const q = query(this.gamesCollection, orderBy('addedAt', 'desc'));
+
+    // onSnapshot creates a real-time "tunnel"
+    onSnapshot(q, (snapshot) => {
+      const updatedGames = snapshot.docs.map(
+        (doc) =>
+          ({
+            ...doc.data(),
+            id: doc.id, // The ID now comes from Firestore
+            addedAt: doc.data()['addedAt']?.toDate(), // Convert Timestamp from Firebase to Date JS
+          }) as Game,
+      );
+
+      this._games.set(updatedGames);
+    });
+  }
   // ── CRUD operations ─────────────────────────────────────────────────────
 
-  addGame(game: Omit<Game, 'id' | 'addedAt'>): void {
-    const newGame: Game = {
+  async addGame(game: Omit<Game, 'id' | 'addedAt'>): Promise<void> {
+    await addDoc(this.gamesCollection, {
       ...game,
-      id: crypto.randomUUID(),
       addedAt: new Date(),
-    };
-
-    this._games.update((games) => [...games, newGame]);
-    this.saveToStorage();
+    });
   }
 
   getAllGames(): Game[] {
@@ -37,32 +62,13 @@ export class GameService {
     return this._games().find((game) => game.id === id);
   }
 
-  updateGame(id: string, changes: Partial<Game>): void {
-    this._games.update((games) =>
-      games.map((game) => (game.id === id ? { ...game, ...changes } : game)),
-    );
-    this.saveToStorage();
+  async updateGame(id: string, changes: Partial<Game>): Promise<void> {
+    const gameDoc = doc(db, 'games', id);
+    await updateDoc(gameDoc, { ...changes });
   }
 
-  deleteGame(id: string): void {
-    this._games.update((games) => games.filter((game) => game.id !== id));
-    this.saveToStorage();
-  }
-
-  // ── LocalStorage ────────────────────────────────────────────────────────
-
-  private saveToStorage(): void {
-    localStorage.setItem('boardshelf_games', JSON.stringify(this._games()));
-  }
-
-  private loadFromStorage(): Game[] {
-    const stored = localStorage.getItem('boardshelf_games');
-    if (!stored) return [];
-
-    // Convert the string of addedAt back to Date
-    return JSON.parse(stored).map((game: Game) => ({
-      ...game,
-      addedAt: new Date(game.addedAt),
-    }));
+  async deleteGame(id: string): Promise<void> {
+    const gameDoc = doc(db, 'games', id);
+    await deleteDoc(gameDoc);
   }
 }
