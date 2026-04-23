@@ -1,5 +1,5 @@
 // src/app/core/services/game.service.ts
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, effect, inject } from '@angular/core';
 import { Game } from '../models/game.model';
 import { db } from '../firebase.config';
 import {
@@ -12,27 +12,39 @@ import {
   query,
   orderBy,
 } from 'firebase/firestore';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GameService {
+  private authService = inject(AuthService);
   private _games = signal<Game[]>([]);
   readonly games = this._games.asReadonly();
   readonly totalGames = computed(() => this._games().length);
 
+  private unsubscribe?: () => void; // Para desligar o rádio quando o user sai
   private gamesCollection = collection(db, 'games');
 
   constructor() {
-    this.listenToGames();
+    effect(() => {
+      const user = this.authService.currentUser();
+      if (user) {
+        this.startListening(user.uid);
+      } else {
+        this.stopListening?.();
+      }
+    });
   }
 
-  private listenToGames() {
+  private startListening(uid: string) {
+    // Sub-collection path: users -> user ID -> games
+    const gamesRef = collection(db, 'users', uid, 'games');
     // Order by addedAt
-    const q = query(this.gamesCollection, orderBy('addedAt', 'desc'));
+    const q = query(gamesRef, orderBy('addedAt', 'desc'));
 
     // onSnapshot creates a real-time "tunnel"
-    onSnapshot(q, (snapshot) => {
+    this.unsubscribe = onSnapshot(q, (snapshot) => {
       const updatedGames = snapshot.docs.map(
         (doc) =>
           ({
@@ -45,10 +57,18 @@ export class GameService {
       this._games.set(updatedGames);
     });
   }
+
+  private stopListening() {
+    if (this.unsubscribe) this.unsubscribe();
+    this._games.set([]);
+  }
   // ── CRUD operations ─────────────────────────────────────────────────────
 
   async addGame(game: Omit<Game, 'id' | 'addedAt'>): Promise<void> {
-    await addDoc(this.gamesCollection, {
+    const uid = this.authService.currentUser()?.uid;
+    if (!uid) return;
+    const gamesRef = collection(db, 'users', uid, 'games');
+    await addDoc(gamesRef, {
       ...game,
       addedAt: new Date(),
     });
@@ -63,12 +83,18 @@ export class GameService {
   }
 
   async updateGame(id: string, changes: Partial<Game>): Promise<void> {
-    const gameDoc = doc(db, 'games', id);
+    const uid = this.authService.currentUser()?.uid;
+    if (!uid) return;
+    const gamesRef = collection(db, 'users', uid, 'games');
+    const gameDoc = doc(gamesRef, id);
     await updateDoc(gameDoc, { ...changes });
   }
 
   async deleteGame(id: string): Promise<void> {
-    const gameDoc = doc(db, 'games', id);
+    const uid = this.authService.currentUser()?.uid;
+    if (!uid) return;
+    const gamesRef = collection(db, 'users', uid, 'games');
+    const gameDoc = doc(gamesRef, id);
     await deleteDoc(gameDoc);
   }
 }

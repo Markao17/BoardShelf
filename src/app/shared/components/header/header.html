@@ -8,3 +8,11 @@
     <li><a routerLink="/add-game" routerLinkActive="active">Add Game</a></li>
   </ul>
 </nav>
+<div class="login">
+  @if (!authService.currentUser()) {
+    <button (click)="authService.loginWithGoogle()">Entrar com Google</button>
+  } @else {
+    <span>Olá, {{ authService.currentUser()?.displayName }}</span>
+    <button (click)="authService.logout()">Sair</button>
+  }
+</div>
