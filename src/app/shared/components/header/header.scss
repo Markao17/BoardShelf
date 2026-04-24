@@ -9,6 +9,12 @@
   gap: 2rem;
 }
 
+.header-actions {
+  display: flex;
+  gap: 1rem;
+  margin-left: auto;
+}
+
 h1 {
   font-family: var(--font-secondary);
   font-size: 1.5rem;

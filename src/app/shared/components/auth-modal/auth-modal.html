@@ -1,0 +1,38 @@
+<div class="auth-container">
+  <header>
+    <h2>{{ view() === 'login' ? 'Welcome back' : 'Create Account' }}</h2>
+    <button class="close-btn" (click)="dialogRef.close()">×</button>
+  </header>
+
+  <button class="google-btn btn-base" (click)="loginWithGoogle()">
+    <img src="/images/icons/google.webp" alt="Google Logo" /> Login with Google
+  </button>
+
+  <div class="divider"><span>OU</span></div>
+
+  @if (view() !== 'magic') {
+    <form (submit)="handleEmailAuth(); $event.preventDefault()">
+      <input type="email" [(ngModel)]="email" name="email" placeholder="Email" required />
+      <input
+        type="password"
+        [(ngModel)]="password"
+        name="password"
+        placeholder="Password"
+        required
+      />
+
+      <button type="submit" class="btn-main">
+        {{ view() === 'login' ? 'Login' : 'Signup' }}
+      </button>
+    </form>
+  }
+
+  <footer>
+    @if (view() === 'login') {
+      <button class="btn-link" (click)="view.set('signup')">Don't have an account? Signup</button>
+      <button class="btn-link" (click)="view.set('magic')">Login with Email</button>
+    } @else {
+      <button class="btn-link" (click)="view.set('login')">Already have an account? Login</button>
+    }
+  </footer>
+</div>

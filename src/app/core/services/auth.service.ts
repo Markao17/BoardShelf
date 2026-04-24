@@ -7,6 +7,8 @@ import {
   signOut,
   onAuthStateChanged,
   User,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
 } from 'firebase/auth';
 import { Router } from '@angular/router';
 
@@ -33,7 +35,25 @@ export class AuthService {
       await signInWithPopup(auth, provider);
       this.router.navigate(['/library']);
     } catch (error) {
-      console.error('Erro no login:', error);
+      console.error('Login with Google failed:', error);
+    }
+  }
+
+  async loginWithEmail(email: string, pass: string) {
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+      this.router.navigate(['/library']);
+    } catch (error) {
+      console.error('Login with Email failed:', error);
+    }
+  }
+
+  async registerWithEmail(email: string, pass: string) {
+    try {
+      await createUserWithEmailAndPassword(auth, email, pass);
+      this.router.navigate(['/library']);
+    } catch (error) {
+      console.error('Registration with Email failed:', error);
     }
   }
 

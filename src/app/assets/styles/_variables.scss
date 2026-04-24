@@ -3,6 +3,7 @@
   --white-color: #fff;
   --black-color: 0 0 0;
   --primary-color: #ffc880;
+  --primary-color-dark: #f5a623;
   --secondary-color: #1b263b;
   --tertiary-color: #3ac2ff;
   --neutral-color: #0d1b2a;
@@ -13,6 +14,10 @@
   --background-color-secondary: #0f1c2c;
   --shadow-color: #172554;
   --accent-color: 251 191 36;
+  --accent-color-hover: 251 191 36 / 0.8;
+  --border-color: var(--primary-color);
+
+  --gradient-title: linear-gradient(180deg, var(--text-color), var(--primary-color));
 
   // Fonts
   --font-primary: 'Inter', sans-serif;

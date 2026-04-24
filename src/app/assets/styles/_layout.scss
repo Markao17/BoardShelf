@@ -21,3 +21,14 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+.cdk-overlay-backdrop {
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+.cdk-global-overlay-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
