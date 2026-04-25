@@ -2,7 +2,7 @@
   <app-sidebar title="Library"></app-sidebar>
   <div class="library-content">
     <p>Total games: {{ total() }}</p>
-    <ul>
+    <ul class="library-content__list">
       @for (game of games(); track game.id) {
         <li>
           <app-game-card [game]="game" (deleteRequest)="deleteGame($event)"></app-game-card>

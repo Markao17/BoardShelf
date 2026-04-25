@@ -1,12 +1,57 @@
-<img [src]="game().imageUrl" alt="Cover image" />
-<p>name: {{ game().name }}</p>
-<p>minPlayers: {{ game().minPlayers }}</p>
-<p>maxPlayers: {{ game().maxPlayers }}</p>
-<p>avgDurationMinutes: {{ game().avgDurationMinutes }}</p>
-<p>categories: {{ game().categories.join(', ') }}</p>
-<p>mode: {{ game().mode }}</p>
-<p>complexity: {{ game().complexity }}</p>
-<p>bggId: {{ game().bggId }}</p>
-<p>notes: {{ game().notes }}</p>
-<a [routerLink]="['/game', game().id]">View</a>
-<button (click)="deleteGame(game().id)">Delete</button>
+<article class="game-card">
+  <a
+    class="game-card__link"
+    [routerLink]="['/game', game().id]"
+    [attr.aria-label]="'Open details for ' + game().name"
+  ></a>
+
+  <img
+    class="game-card__image"
+    [src]="game().imageUrl || ''"
+    [alt]="game().name + ' cover image'"
+  />
+
+  <div class="game-card__overlay"></div>
+
+  <div class="game-card__content">
+    <div class="game-card__top">
+      <span class="game-card__category">
+        {{ game().categories.length ? game().categories[0] : 'Board Game' }}
+      </span>
+    </div>
+
+    <div class="game-card__bottom">
+      <h3 class="game-card__title">{{ game().name }}</h3>
+
+      <div class="game-card__meta">
+        <p class="game-card__chip">
+          <img src="assets/icons/players.svg" alt="" aria-hidden="true" />
+          {{ game().minPlayers }}-{{ game().maxPlayers }}
+        </p>
+        <p class="game-card__chip">
+          <img src="assets/icons/duration.svg" alt="" aria-hidden="true" />
+          {{ game().avgDurationMinutes }}m
+        </p>
+      </div>
+
+      <div class="game-card__complexity">
+        <span class="game-card__complexity-label">Complexity</span>
+        <span class="game-card__stars" aria-label="'Complexity ' + game().complexity + ' out of 5'">
+          @for (level of [1, 2, 3, 4, 5]; track level) {
+            <span>{{ level <= game().complexity ? '★' : '☆' }}</span>
+          }
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <button
+    type="button"
+    class="game-card__delete"
+    aria-label="Delete game"
+    title="Delete game"
+    (click)="deleteGame(game().id); $event.stopPropagation()"
+  >
+    <span aria-hidden="true">✕</span>
+  </button>
+</article>

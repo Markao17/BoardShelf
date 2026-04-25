@@ -8,7 +8,13 @@
     <li><a routerLink="/add-game" routerLinkActive="active">Add Game</a></li>
   </ul>
 </nav>
-<div class="header-actions">
-  <button class="btn-base" (click)="openAuth('login')">Login</button>
-  <button class="btn-main" (click)="openAuth('signup')">Signup</button>
-</div>
+@if (authService.currentUser()) {
+  <div class="header-actions">
+    <button class="btn-base" (click)="authService.logout()">Logout</button>
+  </div>
+} @else {
+  <div class="header-actions">
+    <button class="btn-base" (click)="openAuth('login')">Login</button>
+    <button class="btn-main" (click)="openAuth('signup')">Signup</button>
+  </div>
+}
