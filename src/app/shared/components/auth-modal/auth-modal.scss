@@ -86,6 +86,8 @@ form {
 }
 
 .google-btn {
+  --btn-width: 100%;
+
   @extend %btn-base;
   background: var(--white-color);
   color: var(--neutral-color);
@@ -95,6 +97,10 @@ form {
     width: 20px;
     height: 20px;
   }
+}
+
+form {
+  --btn-width: 100%;
 }
 
 .close-btn {

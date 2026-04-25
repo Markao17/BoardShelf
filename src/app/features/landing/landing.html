@@ -1,1 +1,60 @@
-<p>landing works!</p>
+<div class="landing">
+  <div class="landing__header">
+    <div class="landing__header-content">
+      <h2>Curate your legendary collection</h2>
+      <p>
+        The ultimate vault for your board game library. Organize your relics, consult the oracle for
+        your next game night, and sync with BoardGameGeek.
+      </p>
+      <div class="landing__header-actions">
+        <button class="btn-main" (click)="openAuth('signup')">Start your Vault</button>
+        <button class="btn-base" (click)="openAuth('login')">Sign in</button>
+      </div>
+    </div>
+  </div>
+  <div class="landing__features">
+    <h3>The Artifacts</h3>
+    <p>Tools forged for the modern tabletop archivist.</p>
+    <ul class="landing__features-list">
+      <li class="landing__features-item">
+        <div class="landing__features-icon">
+          <img src="/images/icons/landing-feature-vault.png" alt="Vault" width="25" height="25" />
+        </div>
+        <h4>The Vault</h4>
+        <p>
+          A tactile, card-based library. View your collection as physical objects, beautifully
+          organized and instantly searchable.
+        </p>
+        <img src="/images/landing-vault-img.png" alt="Vault" class="landing__features-image" />
+      </li>
+      <li class="landing__features-item">
+        <div class="landing__features-icon">
+          <img src="/images/icons/landing-feature-oracle.png" alt="Oracle" width="25" height="25" />
+        </div>
+        <h4>The Oracle</h4>
+        <p>
+          Can't decide what to play? Let the Oracle choose based on player count, time, and
+          complexity. Let the glowing dice decide your fate.
+        </p>
+        <img src="/images/landing-oracle-img.png" alt="Oracle" class="landing__features-image" />
+      </li>
+      <li class="landing__features-item">
+        <div class="landing__features-icon">
+          <img
+            src="/images/icons/landing-feature-archive.png"
+            alt="BGG Archive"
+            width="25"
+            height="25"
+          />
+        </div>
+        <h4>BGG Archive</h4>
+        <p>
+          Don't want to fill your shelves manually? Don't worry, we've got you covered. Search games
+          direclty from BoardGameGeek and simply click to add them to your library with all the data
+          automatically imported.
+        </p>
+        <img src="/images/landing-archive-img.png" alt="BGG" class="landing__features-image" />
+      </li>
+    </ul>
+  </div>
+</div>
