@@ -1,0 +1,250 @@
+.add-game {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: calc(100vh - 4rem);
+  padding: 1.5rem;
+}
+
+.add-game__form {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--background-color-secondary) 92%, var(--white-color) 8%),
+    color-mix(in srgb, var(--background-color) 95%, var(--white-color) 5%)
+  );
+  border: 1px solid color-mix(in srgb, var(--text-color-secondary) 35%, transparent);
+  border-radius: 1rem;
+  box-shadow: 0 12px 30px color-mix(in srgb, var(--shadow-color) 55%, transparent);
+  color: var(--text-color);
+  display: grid;
+  gap: 1rem;
+  max-width: 32rem;
+  padding: 1.5rem;
+  width: 100%;
+}
+
+.add-game__header {
+  margin-bottom: 0.25rem;
+}
+
+.add-game__title {
+  color: var(--text-color);
+  font-family: var(--font-primary);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.add-game__field {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.add-game__field--split {
+  gap: 0.75rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.add-game__fieldset {
+  border: 0;
+  margin: 0;
+  min-inline-size: 0;
+  padding: 0;
+}
+
+.add-game__label {
+  color: var(--text-color-tertiary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.add-game__input {
+  background-color: color-mix(in srgb, var(--background-color) 88%, var(--black-color));
+  border: 1px solid color-mix(in srgb, var(--text-color-secondary) 45%, transparent);
+  border-radius: 0.65rem;
+  color: var(--text-color);
+  font: inherit;
+  min-height: 2.75rem;
+  outline: none;
+  padding: 0.65rem 0.75rem;
+  width: 100%;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.add-game__input::placeholder {
+  color: color-mix(in srgb, var(--text-color-secondary) 85%, var(--white-color) 15%);
+}
+
+.add-game__input:focus-visible {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 24%, transparent);
+}
+
+.add-game__hint {
+  color: var(--text-color-secondary);
+  font-size: 0.75rem;
+  margin: 0;
+}
+
+.add-game__media-field {
+  gap: 0.65rem;
+}
+
+.add-game__or-separator {
+  align-items: center;
+  color: var(--text-color-secondary);
+  display: flex;
+  font-size: 0.75rem;
+  font-weight: 600;
+  gap: 0.5rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.add-game__or-separator::before,
+.add-game__or-separator::after {
+  background-color: color-mix(in srgb, var(--text-color-secondary) 35%, transparent);
+  content: '';
+  flex: 1;
+  height: 1px;
+}
+
+.add-game__upload-row {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.add-game__upload-input {
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  width: 1px;
+}
+
+.add-game__upload-btn {
+  background-color: color-mix(in srgb, var(--background-color) 87%, var(--black-color));
+  border: 1px solid color-mix(in srgb, var(--text-color-secondary) 35%, transparent);
+  border-radius: 0.65rem;
+  color: var(--text-color);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  min-height: 2.5rem;
+  padding: 0.65rem 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.add-game__upload-btn:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.add-game__upload-input:focus-visible + .add-game__upload-btn {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 24%, transparent);
+}
+
+.add-game__upload-help {
+  color: var(--text-color-secondary);
+  font-size: 0.75rem;
+}
+
+.add-game__stars,
+.add-game__modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.add-game__star-option input,
+.add-game__mode-option input {
+  inset: 0;
+  opacity: 0;
+  position: absolute;
+}
+
+.add-game__star-option,
+.add-game__mode-option {
+  cursor: pointer;
+  position: relative;
+}
+
+.add-game__star-option span,
+.add-game__mode-option span {
+  align-items: center;
+  background-color: color-mix(in srgb, var(--background-color) 87%, var(--black-color));
+  border: 1px solid color-mix(in srgb, var(--text-color-secondary) 35%, transparent);
+  border-radius: 0.65rem;
+  color: var(--text-color);
+  display: inline-flex;
+  font-size: 0.85rem;
+  font-weight: 600;
+  gap: 0.4rem;
+  min-height: 2.5rem;
+  padding: 0 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.add-game__star-option span {
+  color: color-mix(in srgb, var(--primary-color) 85%, var(--text-color) 15%);
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+}
+
+.add-game__star-option input:focus-visible + span,
+.add-game__mode-option input:focus-visible + span {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 24%, transparent);
+}
+
+.add-game__star-option input:checked + span,
+.add-game__mode-option input:checked + span {
+  background-color: color-mix(in srgb, var(--primary-color) 18%, var(--background-color));
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.add-game__submit {
+  --btn-width: 100%;
+}
+
+.add-game__feedback {
+  border-radius: 0.65rem;
+  font-size: 0.9rem;
+  margin: 0;
+  padding: 0.65rem 0.75rem;
+}
+
+.add-game__feedback--error {
+  background-color: color-mix(in srgb, #ff4d4f 14%, transparent);
+  border: 1px solid color-mix(in srgb, #ff4d4f 45%, transparent);
+  color: color-mix(in srgb, #ffb3b4 85%, var(--white-color) 15%);
+}
+
+.add-game__feedback--success {
+  background-color: color-mix(in srgb, #30c770 14%, transparent);
+  border: 1px solid color-mix(in srgb, #30c770 45%, transparent);
+  color: color-mix(in srgb, #95efbe 90%, var(--white-color) 10%);
+}
+
+@media (max-width: 640px) {
+  .add-game {
+    padding: 1rem;
+  }
+
+  .add-game__form {
+    padding: 1rem;
+  }
+
+  .add-game__field--split {
+    grid-template-columns: 1fr;
+  }
+}

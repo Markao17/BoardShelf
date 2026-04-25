@@ -1,38 +1,153 @@
-<form [formGroup]="gameForm" (ngSubmit)="handleSubmit()">
-  <input type="text" formControlName="name" name="name" placeholder="Game name" />
-  <input type="number" formControlName="minPlayers" name="minPlayers" placeholder="Min players" />
-  <input type="number" formControlName="maxPlayers" name="maxPlayers" placeholder="Max players" />
-  <input
-    type="number"
-    formControlName="avgDurationMinutes"
-    name="avgDurationMinutes"
-    placeholder="Average duration in minutes"
-  />
-  <input type="text" formControlName="categories" placeholder="Ex: Strategy, Family, Party" />
-  <select formControlName="mode" name="mode">
-    <option value="pvp">PVP</option>
-    <option value="coop">Co-op</option>
-    <option value="both">Both</option>
-  </select>
-  <select formControlName="complexity" name="complexity">
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-  </select>
-  @if (gameForm.valid) {
-    <button type="submit" [disabled]="!gameForm.valid">Submit</button>
-  }
+<section class="add-game">
+  <form class="add-game__form" [formGroup]="gameForm" (ngSubmit)="handleSubmit()">
+    <header class="add-game__header">
+      <h1 class="add-game__title">Manual Inscription</h1>
+    </header>
 
-  @if (gameForm.invalid) {
-    @if (gameForm.errors?.['required']) {
-      <p>Erro, por favor, preencha todos os campos obrigatórios.</p>
+    <div class="add-game__field">
+      <label class="add-game__label" for="name">Relic name</label>
+      <input
+        id="name"
+        class="add-game__input"
+        type="text"
+        formControlName="name"
+        name="name"
+        placeholder="e.g. Scythe"
+      />
+    </div>
+
+    <div class="add-game__field add-game__media-field">
+      <label class="add-game__label" for="imageUrl">Cover image</label>
+      <p class="add-game__hint">Paste an image URL, or upload a file from your device.</p>
+
+      <input
+        id="imageUrl"
+        class="add-game__input"
+        type="url"
+        formControlName="imageUrl"
+        name="imageUrl"
+        placeholder="https://..."
+      />
+
+      <div class="add-game__or-separator" aria-hidden="true">or</div>
+
+      <div class="add-game__upload-row">
+        <input
+          id="coverFile"
+          class="add-game__upload-input"
+          type="file"
+          accept="image/*"
+          (change)="handleImageUpload($event)"
+          [disabled]="isUploading()"
+        />
+        <label class="add-game__upload-btn" for="coverFile">Upload image</label>
+        <span class="add-game__upload-help">JPG, PNG or WebP</span>
+        @if (isUploading()) {
+          <p>Uploading image...</p>
+        }
+        @if (uploadError()) {
+          <p class="add-game__upload-error">{{ uploadError() }}</p>
+        }
+        @if (gameForm.get('imageUrl')?.value) {
+          <img [src]="gameForm.get('imageUrl')?.value" alt="Cover image" />
+        }
+      </div>
+    </div>
+
+    <div class="add-game__field add-game__field--split">
+      <div>
+        <label class="add-game__label" for="minPlayers">Players (min)</label>
+        <input
+          id="minPlayers"
+          class="add-game__input"
+          type="number"
+          formControlName="minPlayers"
+          name="minPlayers"
+          min="1"
+        />
+      </div>
+      <div>
+        <label class="add-game__label" for="maxPlayers">Players (max)</label>
+        <input
+          id="maxPlayers"
+          class="add-game__input"
+          type="number"
+          formControlName="maxPlayers"
+          name="maxPlayers"
+          min="1"
+        />
+      </div>
+      <div>
+        <label class="add-game__label" for="avgDurationMinutes">Duration (min)</label>
+        <input
+          id="avgDurationMinutes"
+          class="add-game__input"
+          type="number"
+          formControlName="avgDurationMinutes"
+          name="avgDurationMinutes"
+          min="1"
+          placeholder="e.g. 120"
+        />
+      </div>
+    </div>
+
+    <div class="add-game__field">
+      <label class="add-game__label" for="categories">Categories</label>
+      <input
+        id="categories"
+        class="add-game__input"
+        type="text"
+        formControlName="categories"
+        name="categories"
+        placeholder="e.g. Strategy, Family, Party"
+      />
+      <p class="add-game__hint">Use comma-separated values. Example: Strategy, Family, Party</p>
+    </div>
+
+    <fieldset class="add-game__field add-game__fieldset">
+      <legend class="add-game__label">Complexity (1 to 5 stars)</legend>
+      <div class="add-game__stars">
+        @for (level of [1, 2, 3, 4, 5]; track level) {
+          <label class="add-game__star-option">
+            <input type="radio" formControlName="complexity" [value]="level" />
+            <span>{{ '★'.repeat(level) }}{{ '☆'.repeat(5 - level) }}</span>
+          </label>
+        }
+      </div>
+    </fieldset>
+
+    <fieldset class="add-game__field add-game__fieldset">
+      <legend class="add-game__label">Game mode</legend>
+      <div class="add-game__modes">
+        <label class="add-game__mode-option">
+          <input type="radio" formControlName="mode" value="pvp" />
+          <span>Competitive</span>
+        </label>
+        <label class="add-game__mode-option">
+          <input type="radio" formControlName="mode" value="coop" />
+          <span>Co-op</span>
+        </label>
+        <label class="add-game__mode-option">
+          <input type="radio" formControlName="mode" value="both" />
+          <span>Both</span>
+        </label>
+      </div>
+    </fieldset>
+
+    <button class="add-game__submit btn-main" type="submit" [disabled]="!gameForm.valid">
+      Catalog Game
+    </button>
+
+    @if (gameForm.invalid && (gameForm.touched || gameForm.dirty)) {
+      <p class="add-game__feedback add-game__feedback--error">
+        Please fill all required fields before cataloging.
+      </p>
     }
-  }
 
-  @if (submitted()) {
-    <p>Jogo adicionado com sucesso!</p>
-    <p>Redirecionando para a biblioteca...</p>
-  }
-</form>
+    @if (submitted()) {
+      <p class="add-game__feedback add-game__feedback--success">
+        Game added successfully. Redirecting to your library...
+      </p>
+    }
+  </form>
+</section>
