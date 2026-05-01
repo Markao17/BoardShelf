@@ -5,9 +5,10 @@ import { GamePicker } from './features/game-picker/game-picker';
 import { GameDetail } from './features/game-detail/game-detail';
 import { AddGame } from './features/add-game/add-game';
 import { authGuard } from './core/guards/auth-guard';
+import { guestGuard } from './core/guards/guest-guard';
 
 export const routes: Routes = [
-  { path: '', component: Landing },
+  { path: '', component: Landing, canActivate: [guestGuard] },
   { path: 'library', component: Library, canActivate: [authGuard] },
   { path: 'game-picker', component: GamePicker, canActivate: [authGuard] },
   { path: 'game/:id', component: GameDetail, canActivate: [authGuard] },

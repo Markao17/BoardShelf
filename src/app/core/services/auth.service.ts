@@ -15,18 +15,25 @@ import { Router } from '@angular/router';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private router = inject(Router);
-
-  // User state is a Signal
-  currentUser = signal<User | null>(null);
-
-  constructor() {
-    // Detect if the user entered or exited
+  private isAuthInitialized = signal(false);
+  private authInitializedPromise = new Promise<void>((resolve) => {
     onAuthStateChanged(auth, (user) => {
       this.currentUser.set(user);
+      this.isAuthInitialized.set(true);
+      resolve();
+
       if (!user) {
         this.router.navigate(['/']); // Redirect if not logged in
       }
     });
+  });
+
+  // User state is a Signal
+  currentUser = signal<User | null>(null);
+
+  async waitForAuthInitialization() {
+    if (this.isAuthInitialized()) return;
+    await this.authInitializedPromise;
   }
 
   async loginWithGoogle() {
