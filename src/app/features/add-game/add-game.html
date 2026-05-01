@@ -110,7 +110,9 @@
         @for (level of [1, 2, 3, 4, 5]; track level) {
           <label class="add-game__star-option">
             <input type="radio" formControlName="complexity" [value]="level" />
-            <span>{{ '★'.repeat(level) }}{{ '☆'.repeat(5 - level) }}</span>
+            <span
+              >{{ '★'.repeat(level) }}<i class="star-empty">{{ '☆'.repeat(5 - level) }}</i></span
+            >
           </label>
         }
       </div>
