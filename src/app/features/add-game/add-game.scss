@@ -1,6 +1,8 @@
 .add-game {
   align-items: center;
   display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
   justify-content: center;
   min-height: calc(100vh - 4rem);
   padding: 1.5rem;
@@ -21,6 +23,32 @@
   max-width: 32rem;
   padding: 1.5rem;
   width: 100%;
+}
+
+.add-game__form-search {
+  position: relative;
+}
+
+.add-game__search-results {
+  list-style: none;
+}
+
+.add-game__search-results li {
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+  border-radius: 0.65rem;
+}
+
+.add-game__search-results li:hover {
+  background-color: var(--primary-color-dark);
+  color: var(--background-color);
+}
+
+.add-game__search-results li:focus-visible {
+  background-color: color-mix(in srgb, var(--primary-color) 18%, var(--background-color));
 }
 
 .add-game__header {

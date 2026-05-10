@@ -1,4 +1,38 @@
 <section class="add-game">
+  <div class="add-game__form add-game__form-search">
+    <input type="text" [formControl]="searchControl" placeholder="Pesquisar jogo na BGG..." />
+
+    @if (isSearching()) {
+      <p>A pesquisar...</p>
+    }
+
+    @if (searchError()) {
+      <p class="add-game__upload-error">{{ searchError() }}</p>
+    }
+
+    @if (
+      !isSearching() &&
+      !searchError() &&
+      (searchControl.value ?? '').trim().length > 0 &&
+      searchResults().length === 0
+    ) {
+      <p>No results found.</p>
+    }
+
+    @if (searchResults().length > 0) {
+      <ul class="add-game__search-results">
+        @for (result of searchResults(); track result.bggId) {
+          <li tabindex="0" (keydown.enter)="selectGame(result)" (click)="selectGame(result)">
+            <span>{{ result.name }}</span>
+            @if (result.yearPublished) {
+              <span>({{ result.yearPublished }})</span>
+            }
+          </li>
+        }
+      </ul>
+    }
+  </div>
+
   <form class="add-game__form" [formGroup]="gameForm" (ngSubmit)="handleSubmit()">
     <header class="add-game__header">
       <h1 class="add-game__title">Manual Inscription</h1>
