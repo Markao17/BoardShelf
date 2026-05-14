@@ -1,7 +1,18 @@
 <div class="container container--has-sidebar">
   <app-sidebar title="Library"></app-sidebar>
   <div class="library-content">
-    <p>Total games: {{ total() }}</p>
+    @if (filteredTotal() !== total()) {
+      <p class="library-content__total">
+        Showing <strong class="library-content__total-number">{{ filteredTotal() }}</strong> of
+        <strong class="library-content__total-number">{{ total() }}</strong> games
+      </p>
+    } @else {
+      <p class="library-content__total">
+        Showing all
+        <strong class="library-content__total-number">{{ total() }}</strong> games
+      </p>
+    }
+    <app-filter-bar></app-filter-bar>
     <ul class="library-content__list">
       @for (game of games(); track game.id) {
         <li>

@@ -1,0 +1,10 @@
+{
+  "/bgg-api": {
+    "target": "https://boardgamegeek.com",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/bgg-api": ""
+    }
+  }
+}

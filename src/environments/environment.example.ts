@@ -1,4 +1,5 @@
 export const environment = {
+  production: false,
   firebase: {
     apiKey: 'YOUR_API_KEY',
     authDomain: 'YOUR_AUTH_DOMAIN',
@@ -10,5 +11,10 @@ export const environment = {
   cloudinary: {
     cloudName: 'YOUR_CLOUD_NAME',
     uploadPreset: 'YOUR_UPLOAD_PRESET',
+  },
+  boardGameGeek: {
+    apiToken: 'YOUR_BGG_APPLICATION_TOKEN',
+    apiOrigin: 'https://boardgamegeek.com',
+    devProxyPath: '/bgg-api',
   },
 };

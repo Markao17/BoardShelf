@@ -1,5 +1,23 @@
+.library-content {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
 .library-content__list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 1rem;
+}
+
+.library-content__total {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-color-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+
+  &-number {
+    color: var(--primary-color);
+  }
 }

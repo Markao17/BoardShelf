@@ -1,0 +1,127 @@
+<div class="filter-bar">
+  <div class="filter-bar__field">
+    <label class="filter-bar__label" for="players">Players</label>
+    <input
+      id="players"
+      class="filter-bar__input"
+      type="number"
+      name="players"
+      placeholder="e.g. 2"
+      min="1"
+      [value]="currentPlayers() ?? ''"
+      (input)="updatePlayers(+$any($event.target).value || null)"
+    />
+  </div>
+
+  <div class="filter-bar__field filter-bar__modes-field">
+    <label class="filter-bar__label" for="mode"
+      >Mode
+      <button
+        class="filter-bar__clear btn-link"
+        type="button"
+        (click)="updateMode(null)"
+        [class.active]="currentMode() === null"
+      >
+        Clear
+      </button>
+    </label>
+    <div class="filter-bar__modes">
+      <button type="button" (click)="updateMode('pvp')" [class.active]="currentMode() === 'pvp'">
+        PVP
+      </button>
+      <button type="button" (click)="updateMode('coop')" [class.active]="currentMode() === 'coop'">
+        Co-op
+      </button>
+      <button type="button" (click)="updateMode('both')" [class.active]="currentMode() === 'both'">
+        Both
+      </button>
+    </div>
+  </div>
+
+  <div class="filter-bar__field">
+    <span class="filter-bar__label" id="categories-label">Categories</span>
+    <div class="filter-bar__dropdown">
+      <button
+        type="button"
+        class="filter-bar__dropdown-trigger"
+        aria-haspopup="listbox"
+        aria-labelledby="categories-label"
+        [attr.aria-expanded]="isCategoriesOpen()"
+        (click)="toggleCategoriesDropdown()"
+      >
+        <span class="filter-bar__dropdown-value">{{ categoriesLabel() }}</span>
+        <span class="filter-bar__dropdown-caret" aria-hidden="true">▾</span>
+      </button>
+
+      @if (isCategoriesOpen()) {
+        <div class="filter-bar__dropdown-panel" role="listbox" aria-multiselectable="true">
+          @if (selectedCategories().length > 0) {
+            <button type="button" class="filter-bar__dropdown-clear" (click)="clearCategories()">
+              Clear selection
+            </button>
+          }
+
+          @for (category of availableCategories(); track category) {
+            <label class="filter-bar__option">
+              <input
+                type="checkbox"
+                class="filter-bar__option-input"
+                [value]="category"
+                [checked]="selectedCategories().includes(category)"
+                (change)="toggleCategory(category, $any($event.target).checked)"
+              />
+              <span class="filter-bar__option-box" aria-hidden="true"></span>
+              <span class="filter-bar__option-label">{{ category }}</span>
+            </label>
+          } @empty {
+            <p class="filter-bar__option-empty">No categories</p>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="filter-bar__field">
+    <span class="filter-bar__label" id="complexity-label">Complexity</span>
+    <div class="filter-bar__stars" role="radiogroup" aria-labelledby="complexity-label">
+      @for (level of complexityLevels; track level) {
+        <button
+          type="button"
+          class="filter-bar__star"
+          [class.is-active]="isComplexityActive(level)"
+          [attr.aria-label]="'Complexity ' + level + ' out of 5'"
+          [attr.aria-pressed]="currentComplexity() === level.toString()"
+          (click)="setComplexity(level)"
+        >
+          {{ isComplexityActive(level) ? '★' : '☆' }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="filter-bar__field">
+    <label class="filter-bar__label" for="maxDuration">Duration (min)</label>
+    <input
+      id="maxDuration"
+      class="filter-bar__input"
+      type="number"
+      name="maxDuration"
+      placeholder="e.g. 120"
+      min="1"
+      [value]="currentMaxDuration() ?? ''"
+      (input)="updateMaxDuration(+$any($event.target).value || null)"
+    />
+  </div>
+
+  <div class="filter-bar__actions">
+    @if (hasActiveFilters()) {
+      <button type="button" class="btn-link" (click)="resetFilters()">Reset filters</button>
+    }
+
+    @if (canPickRandom()) {
+      <a [routerLink]="randomGameLink()" class="btn-main">Pick Random Game</a>
+    } @else {
+      <button type="button" class="btn-main" disabled aria-disabled="true">Pick Random Game</button>
+    }
+  </div>
+</div>

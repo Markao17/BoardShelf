@@ -1,13 +1,26 @@
 <section class="add-game">
   <div class="add-game__form add-game__form-search">
-    <input type="text" [formControl]="searchControl" placeholder="Pesquisar jogo na BGG..." />
+    <input
+      class="add-game__input"
+      type="text"
+      [formControl]="searchControl"
+      placeholder="Search for a game on BGG..."
+    />
 
     @if (isSearching()) {
-      <p>A pesquisar...</p>
+      <p>Searching...</p>
     }
 
     @if (searchError()) {
       <p class="add-game__upload-error">{{ searchError() }}</p>
+    }
+
+    @if (isLoadingThing()) {
+      <p>Loading game details from BGG…</p>
+    }
+
+    @if (thingLoadError()) {
+      <p class="add-game__upload-error">{{ thingLoadError() }}</p>
     }
 
     @if (

@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { GameService } from '../../core/services/game.service';
+import { Game } from '../../core/models/game.model';
 import { Cloudinary } from '../../core/services/cloudinary';
 import { Router } from '@angular/router';
 import { BggSearchResult } from '../../core/models/bgg-search-result.model';
@@ -24,6 +25,8 @@ export class AddGame implements OnInit {
   searchResults = signal<BggSearchResult[]>([]);
   isSearching = signal(false);
   searchError = signal<string | null>(null);
+  isLoadingThing = signal(false);
+  thingLoadError = signal<string | null>(null);
 
   searchControl = new FormControl('');
 
@@ -32,14 +35,45 @@ export class AddGame implements OnInit {
   uploadError = signal<string | null>(null);
 
   selectGame(result: BggSearchResult) {
-    this.gameForm.patchValue({
-      bggId: result.bggId,
-      name: result.name,
-    });
     this.searchControl.setValue('');
     this.searchResults.set([]);
-    this.isSearching.set(false);
     this.searchError.set(null);
+    this.thingLoadError.set(null);
+    this.isLoadingThing.set(true);
+
+    this.bggService.getThing(result.bggId).subscribe({
+      next: (details) => {
+        this.isLoadingThing.set(false);
+        console.log('[AddGame] BGG thing (full parsed object):', details);
+        console.table(details.categories.map((c) => ({ category: c })));
+        console.table(details.mechanics.map((m) => ({ mechanic: m })));
+
+        this.gameForm.patchValue({
+          bggId: details.bggId,
+          name: details.name,
+          imageUrl: details.imageUrl,
+          minPlayers: details.minPlayers,
+          maxPlayers: details.maxPlayers,
+          avgDurationMinutes: details.avgDurationMinutes,
+          categories:
+            details.categories.length > 0
+              ? details.categories.join(', ')
+              : details.mechanics.slice(0, 3).join(', ') || 'General',
+          mode: details.mode,
+          complexity: details.complexity,
+        });
+      },
+      error: (err: unknown) => {
+        this.isLoadingThing.set(false);
+        const message = err instanceof Error ? err.message : 'Failed to load game from BGG.';
+        this.thingLoadError.set(message);
+        console.error('[AddGame] BGG /thing failed:', err);
+        this.gameForm.patchValue({
+          bggId: result.bggId,
+          name: result.name,
+        });
+      },
+    });
   }
 
   ngOnInit(): void {
@@ -87,10 +121,22 @@ export class AddGame implements OnInit {
   handleSubmit() {
     if (this.gameForm.valid) {
       const raw = this.gameForm.getRawValue();
-      this.gameService.addGame({
-        ...(raw as any),
-        categories: raw.categories ? raw.categories.split(',').map((c: string) => c.trim()) : [],
-      });
+      const categories = raw.categories
+        ? raw.categories.split(',').map((c: string) => c.trim())
+        : [];
+      const payload: Omit<Game, 'id' | 'addedAt'> = {
+        name: raw.name!,
+        imageUrl: raw.imageUrl || undefined,
+        minPlayers: raw.minPlayers!,
+        maxPlayers: raw.maxPlayers!,
+        avgDurationMinutes: raw.avgDurationMinutes!,
+        categories,
+        mode: raw.mode as Game['mode'],
+        complexity: raw.complexity as Game['complexity'],
+        notes: raw.notes || undefined,
+        bggId: raw.bggId || undefined,
+      };
+      this.gameService.addGame(payload);
       this.submitted.set(true);
       setTimeout(() => {
         this.router.navigate(['/library']);
