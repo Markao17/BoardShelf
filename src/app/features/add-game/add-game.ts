@@ -44,9 +44,6 @@ export class AddGame implements OnInit {
     this.bggService.getThing(result.bggId).subscribe({
       next: (details) => {
         this.isLoadingThing.set(false);
-        console.log('[AddGame] BGG thing (full parsed object):', details);
-        console.table(details.categories.map((c) => ({ category: c })));
-        console.table(details.mechanics.map((m) => ({ mechanic: m })));
 
         this.gameForm.patchValue({
           bggId: details.bggId,
@@ -67,7 +64,6 @@ export class AddGame implements OnInit {
         this.isLoadingThing.set(false);
         const message = err instanceof Error ? err.message : 'Failed to load game from BGG.';
         this.thingLoadError.set(message);
-        console.error('[AddGame] BGG /thing failed:', err);
         this.gameForm.patchValue({
           bggId: result.bggId,
           name: result.name,
@@ -93,7 +89,6 @@ export class AddGame implements OnInit {
             catchError((err: unknown) => {
               const message = err instanceof Error ? err.message : 'Search failed.';
               this.searchError.set(message);
-              console.error('[BGG search] failed:', err);
               return of([] as BggSearchResult[]);
             }),
           );

@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, throwError, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { BggSearchResult } from '../models/bgg-search-result.model';
 import { BggThingDetails } from '../models/bgg-thing-details.model';
@@ -38,10 +38,7 @@ export class BggService {
       );
   }
 
-  /**
-   * Full game metadata for one BGG id (`/xmlapi2/thing?id=…&stats=1`).
-   * Logs a raw XML preview and the parsed object to the console for debugging.
-   */
+  /** Full game metadata for one BGG id (`/xmlapi2/thing?id=…&stats=1`). */
   getThing(bggId: string): Observable<BggThingDetails> {
     const id = bggId.trim();
     if (!id) {
@@ -64,14 +61,7 @@ export class BggService {
         responseType: 'text',
       })
       .pipe(
-        tap((body) => {
-          console.log('[BGG /thing] raw XML length (chars):', body.length);
-          console.log('[BGG /thing] raw XML preview:\n', body.slice(0, 2000));
-        }),
         map((body) => this.parseThingXml(body)),
-        tap((details) => {
-          console.log('[BGG /thing] parsed object (used to fill the form):', details);
-        }),
         catchError((err: unknown) => throwError(() => new Error(this.describeHttpError(err)))),
       );
   }
