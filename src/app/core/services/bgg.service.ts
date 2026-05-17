@@ -13,7 +13,7 @@ export class BggService {
   /** XML API 2 base (`…/xmlapi2`) — dev uses `/bgg-api` proxy to avoid browser CORS. */
   private readonly xmlApi2BaseUrl = this.resolveXmlApi2BaseUrl();
 
-  search(query: string): Observable<BggSearchResult[]> {
+  search(query: string, page = 1): Observable<BggSearchResult[]> {
     const trimmed = query.trim();
     if (!trimmed) return of([]);
 
@@ -24,7 +24,7 @@ export class BggService {
       );
     }
 
-    const params = new HttpParams().set('query', trimmed).set('type', 'boardgame');
+    const params = new HttpParams().set('query', trimmed).set('type', 'boardgame').set('page', page);
 
     return this.http
       .get(`${this.xmlApi2BaseUrl}/search`, {
@@ -111,7 +111,7 @@ export class BggService {
       });
     });
 
-    return results.slice(0, 25);
+    return results;
   }
 
   private parseThingXml(xml: string): BggThingDetails {

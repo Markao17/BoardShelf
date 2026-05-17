@@ -18,6 +18,11 @@
       <span class="game-card__category">
         {{ game().categories.length ? game().categories[0] : 'Board Game' }}
       </span>
+      @if (game().categories.length > 1) {
+        <span class="game-card__category game-card__category--count"
+          >+ {{ game().categories.length - 1 }}</span
+        >
+      }
     </div>
 
     <div class="game-card__bottom">

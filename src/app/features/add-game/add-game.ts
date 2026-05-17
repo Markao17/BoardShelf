@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { GameService } from '../../core/services/game.service';
 import { Game } from '../../core/models/game.model';
@@ -23,10 +23,27 @@ export class AddGame implements OnInit {
   private bggService = inject(BggService);
 
   searchResults = signal<BggSearchResult[]>([]);
+  searchPage = signal(1);
   isSearching = signal(false);
   searchError = signal<string | null>(null);
   isLoadingThing = signal(false);
   thingLoadError = signal<string | null>(null);
+  readonly searchPageSize = 10;
+
+  searchTotalPages = computed(() =>
+    Math.max(1, Math.ceil(this.searchResults().length / this.searchPageSize)),
+  );
+  paginatedSearchResults = computed(() => {
+    const startIndex = (this.searchPage() - 1) * this.searchPageSize;
+    return this.searchResults().slice(startIndex, startIndex + this.searchPageSize);
+  });
+  searchResultStart = computed(() => {
+    if (this.searchResults().length === 0) return 0;
+    return (this.searchPage() - 1) * this.searchPageSize + 1;
+  });
+  searchResultEnd = computed(() =>
+    Math.min(this.searchPage() * this.searchPageSize, this.searchResults().length),
+  );
 
   searchControl = new FormControl('');
 
@@ -37,6 +54,7 @@ export class AddGame implements OnInit {
   selectGame(result: BggSearchResult) {
     this.searchControl.setValue('');
     this.searchResults.set([]);
+    this.searchPage.set(1);
     this.searchError.set(null);
     this.thingLoadError.set(null);
     this.isLoadingThing.set(true);
@@ -80,10 +98,12 @@ export class AddGame implements OnInit {
         switchMap((query) => {
           if (!query?.trim()) {
             this.searchResults.set([]);
+            this.searchPage.set(1);
             this.searchError.set(null);
             return of([]);
           }
           this.isSearching.set(true);
+          this.searchPage.set(1);
           this.searchError.set(null);
           return this.bggService.search(query).pipe(
             catchError((err: unknown) => {
@@ -96,8 +116,14 @@ export class AddGame implements OnInit {
       )
       .subscribe((results) => {
         this.searchResults.set(results);
+        this.searchPage.set(1);
         this.isSearching.set(false);
       });
+  }
+
+  changeSearchPage(page: number): void {
+    const nextPage = Math.min(Math.max(page, 1), this.searchTotalPages());
+    this.searchPage.set(nextPage);
   }
 
   gameForm = this.fb.group({

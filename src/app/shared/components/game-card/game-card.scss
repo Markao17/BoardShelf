@@ -48,6 +48,7 @@
 
   &__top {
     display: flex;
+    gap: 0.25rem;
 
     @media (min-width: 768px) {
       position: absolute;

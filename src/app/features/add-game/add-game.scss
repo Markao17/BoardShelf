@@ -6,6 +6,25 @@
   justify-content: center;
   min-height: calc(100vh - 4rem);
   padding: 1.5rem;
+
+  &__or-separator {
+    align-items: center;
+    color: var(--text-color-secondary);
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    font-size: 0.75rem;
+    font-weight: 600;
+    gap: 0.5rem;
+    letter-spacing: 0.04em;
+    max-width: 32rem;
+    width: 100%;
+
+    hr {
+      border-color: color-mix(in srgb, var(--text-color-secondary) 35%, transparent);
+      flex: 1;
+      height: 1px;
+    }
+  }
 }
 
 .add-game__form {
@@ -49,6 +68,45 @@
 
 .add-game__search-results li:focus-visible {
   background-color: color-mix(in srgb, var(--primary-color) 18%, var(--background-color));
+}
+
+.add-game__pagination {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+}
+
+.add-game__pagination button {
+  background-color: color-mix(in srgb, var(--background-color) 87%, var(--black-color));
+  border: 1px solid color-mix(in srgb, var(--text-color-secondary) 35%, transparent);
+  border-radius: 0.65rem;
+  color: var(--text-color);
+  cursor: pointer;
+  font: inherit;
+  min-height: 2.4rem;
+  padding: 0 0.85rem;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.add-game__pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.add-game__pagination button:not(:disabled):hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.add-game__pagination p {
+  color: var(--text-color-secondary);
+  font-size: 0.85rem;
+  margin: 0;
+  text-align: center;
 }
 
 .add-game__header {
@@ -134,14 +192,6 @@
   gap: 0.5rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-}
-
-.add-game__or-separator::before,
-.add-game__or-separator::after {
-  background-color: color-mix(in srgb, var(--text-color-secondary) 35%, transparent);
-  content: '';
-  flex: 1;
-  height: 1px;
 }
 
 .add-game__upload-row {

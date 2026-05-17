@@ -34,7 +34,7 @@
 
     @if (searchResults().length > 0) {
       <ul class="add-game__search-results">
-        @for (result of searchResults(); track result.bggId) {
+        @for (result of paginatedSearchResults(); track result.bggId) {
           <li tabindex="0" (keydown.enter)="selectGame(result)" (click)="selectGame(result)">
             <span>{{ result.name }}</span>
             @if (result.yearPublished) {
@@ -43,7 +43,33 @@
           </li>
         }
       </ul>
+
+      <nav class="add-game__pagination" aria-label="Search results pagination">
+        <button
+          type="button"
+          (click)="changeSearchPage(searchPage() - 1)"
+          [disabled]="searchPage() === 1"
+        >
+          Previous
+        </button>
+        <p>
+          Showing {{ searchResultStart() }}-{{ searchResultEnd() }} of {{ searchResults().length }}
+        </p>
+        <button
+          type="button"
+          (click)="changeSearchPage(searchPage() + 1)"
+          [disabled]="searchPage() === searchTotalPages()"
+        >
+          Next
+        </button>
+      </nav>
     }
+  </div>
+
+  <div class="add-game__or-separator">
+    <hr />
+    OR
+    <hr />
   </div>
 
   <form class="add-game__form" [formGroup]="gameForm" (ngSubmit)="handleSubmit()">
