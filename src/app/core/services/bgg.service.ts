@@ -152,7 +152,14 @@ export class BggService {
     const maxPlayersRaw = this.intAttr(item, 'maxplayers', minPlayers);
     const maxPlayers = Math.max(minPlayers, maxPlayersRaw ?? minPlayers);
 
-    const avgDurationMinutes = this.resolvePlayMinutes(item);
+    const minDurationMinutes = this.intAttr(item, 'minplaytime', null);
+    const maxDurationMinutes = this.intAttr(item, 'maxplaytime', null);
+    const playingTimeMinutes = this.intAttr(item, 'playingtime', null);
+    const avgDurationMinutes = this.resolvePlayMinutes(
+      playingTimeMinutes,
+      minDurationMinutes,
+      maxDurationMinutes,
+    );
 
     const categories = this.linkValues(item, 'boardgamecategory');
     const mechanics = this.linkValues(item, 'boardgamemechanic');
@@ -172,6 +179,8 @@ export class BggService {
       imageUrl,
       minPlayers,
       maxPlayers,
+      minDurationMinutes,
+      maxDurationMinutes,
       avgDurationMinutes,
       categories,
       mechanics,
@@ -188,15 +197,17 @@ export class BggService {
     return Number.isFinite(n) ? n : fallback;
   }
 
-  private resolvePlayMinutes(item: Element): number {
-    const playing = this.intAttr(item, 'playingtime', null);
-    if (playing != null && playing > 0) return playing;
-
-    const minT = this.intAttr(item, 'minplaytime', null);
-    const maxT = this.intAttr(item, 'maxplaytime', null);
-    if (minT != null && maxT != null && maxT > 0) return Math.max(1, Math.round((minT + maxT) / 2));
-    if (maxT != null && maxT > 0) return maxT;
-    if (minT != null && minT > 0) return minT;
+  private resolvePlayMinutes(
+    playingTimeMinutes: number | null,
+    minDurationMinutes: number | null,
+    maxDurationMinutes: number | null,
+  ): number {
+    if (playingTimeMinutes != null && playingTimeMinutes > 0) return playingTimeMinutes;
+    if (minDurationMinutes != null && maxDurationMinutes != null && maxDurationMinutes > 0) {
+      return Math.max(1, Math.round((minDurationMinutes + maxDurationMinutes) / 2));
+    }
+    if (maxDurationMinutes != null && maxDurationMinutes > 0) return maxDurationMinutes;
+    if (minDurationMinutes != null && minDurationMinutes > 0) return minDurationMinutes;
 
     return 60;
   }

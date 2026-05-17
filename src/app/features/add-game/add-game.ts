@@ -6,6 +6,7 @@ import { Cloudinary } from '../../core/services/cloudinary';
 import { Router } from '@angular/router';
 import { BggSearchResult } from '../../core/models/bgg-search-result.model';
 import { BggService } from '../../core/services/bgg.service';
+import { BggThingDetails } from '../../core/models/bgg-thing-details.model';
 import { catchError, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
@@ -28,6 +29,7 @@ export class AddGame implements OnInit {
   searchError = signal<string | null>(null);
   isLoadingThing = signal(false);
   thingLoadError = signal<string | null>(null);
+  selectedBggDetails = signal<BggThingDetails | null>(null);
   readonly searchPageSize = 10;
 
   searchTotalPages = computed(() =>
@@ -62,6 +64,7 @@ export class AddGame implements OnInit {
     this.bggService.getThing(result.bggId).subscribe({
       next: (details) => {
         this.isLoadingThing.set(false);
+        this.selectedBggDetails.set(details);
 
         this.gameForm.patchValue({
           bggId: details.bggId,
@@ -80,6 +83,7 @@ export class AddGame implements OnInit {
       },
       error: (err: unknown) => {
         this.isLoadingThing.set(false);
+        this.selectedBggDetails.set(null);
         const message = err instanceof Error ? err.message : 'Failed to load game from BGG.';
         this.thingLoadError.set(message);
         this.gameForm.patchValue({
@@ -99,11 +103,13 @@ export class AddGame implements OnInit {
           if (!query?.trim()) {
             this.searchResults.set([]);
             this.searchPage.set(1);
+            this.selectedBggDetails.set(null);
             this.searchError.set(null);
             return of([]);
           }
           this.isSearching.set(true);
           this.searchPage.set(1);
+          this.selectedBggDetails.set(null);
           this.searchError.set(null);
           return this.bggService.search(query).pipe(
             catchError((err: unknown) => {
@@ -142,17 +148,23 @@ export class AddGame implements OnInit {
   handleSubmit() {
     if (this.gameForm.valid) {
       const raw = this.gameForm.getRawValue();
+      const bggDetails = this.selectedBggDetails();
       const categories = raw.categories
         ? raw.categories.split(',').map((c: string) => c.trim())
         : [];
       const payload: Omit<Game, 'id' | 'addedAt'> = {
         name: raw.name!,
         imageUrl: raw.imageUrl || undefined,
+        yearPublished: bggDetails?.yearPublished ?? undefined,
         minPlayers: raw.minPlayers!,
         maxPlayers: raw.maxPlayers!,
+        minDurationMinutes: bggDetails?.minDurationMinutes ?? undefined,
+        maxDurationMinutes: bggDetails?.maxDurationMinutes ?? undefined,
         avgDurationMinutes: raw.avgDurationMinutes!,
         categories,
+        mechanics: bggDetails?.mechanics.length ? bggDetails.mechanics : undefined,
         mode: raw.mode as Game['mode'],
+        averageWeight: bggDetails?.averageWeight ?? undefined,
         complexity: raw.complexity as Game['complexity'],
         notes: raw.notes || undefined,
         bggId: raw.bggId || undefined,

@@ -1,9 +1,108 @@
-<p>name: {{ game()?.name }}</p>
-<p>minPlayers: {{ game()?.minPlayers }}</p>
-<p>maxPlayers: {{ game()?.maxPlayers }}</p>
-<p>avgDurationMinutes: {{ game()?.avgDurationMinutes }}</p>
-<p>categories: {{ game()?.categories?.join(', ') }}</p>
-<p>mode: {{ game()?.mode }}</p>
-<p>complexity: {{ game()?.complexity }}</p>
-<p>bggId: {{ game()?.bggId }}</p>
-<p>notes: {{ game()?.notes }}</p>
+<div class="container container--has-sidebar">
+  <app-sidebar title="The Vault"></app-sidebar>
+
+  @if (game(); as game) {
+    <article class="game-detail">
+      <section class="game-detail__hero">
+        @if (game.imageUrl) {
+          <img class="game-detail__cover" [src]="game.imageUrl" [alt]="game.name + ' cover art'" />
+        }
+
+        <div class="game-detail__hero-content">
+          <div class="game-detail__tags">
+            <span>{{ modeLabel(game.mode) }}</span>
+            @if (game.categories[0]) {
+              <span>{{ game.categories[0] }}</span>
+            }
+            @if (game.yearPublished) {
+              <span>{{ game.yearPublished }}</span>
+            }
+          </div>
+
+          <h1>{{ game.name }}</h1>
+          <p>{{ summary(game) }}</p>
+        </div>
+
+        <div class="game-detail__actions">
+          @if (bggUrl(); as url) {
+            <a class="btn-main" [href]="url" target="_blank" rel="noreferrer">View on BGG</a>
+          }
+          <button class="game-detail__delete" type="button" (click)="deleteGame()">Delete</button>
+        </div>
+      </section>
+
+      <section class="game-detail__content">
+        <div class="game-detail__stack">
+          <section class="game-detail__panel">
+            <h2>Vital Statistics</h2>
+            <dl class="game-detail__stats">
+              <div>
+                <dt>Players</dt>
+                <dd>{{ game.minPlayers }}-{{ game.maxPlayers }}</dd>
+              </div>
+              <div>
+                <dt>Playtime</dt>
+                <dd>{{ formatDuration(game) }}</dd>
+              </div>
+              <div>
+                <dt>Complexity</dt>
+                <dd class="game-detail__stars" [attr.aria-label]="'Complexity ' + game.complexity + ' out of 5'">
+                  @for (level of [1, 2, 3, 4, 5]; track level) {
+                    <span>{{ level <= game.complexity ? '★' : '☆' }}</span>
+                  }
+                </dd>
+              </div>
+              @if (game.averageWeight) {
+                <div>
+                  <dt>BGG Weight</dt>
+                  <dd>{{ game.averageWeight.toFixed(1) }}</dd>
+                </div>
+              }
+            </dl>
+          </section>
+
+          <section class="game-detail__panel">
+            <h2>Curator's Notes</h2>
+            <p>{{ game.notes || 'No notes have been added for this game yet.' }}</p>
+          </section>
+        </div>
+
+        <section class="game-detail__panel game-detail__panel--wide">
+          <h2>Game DNA</h2>
+
+          <div class="game-detail__group">
+            <h3>Categories</h3>
+            <div class="game-detail__chips">
+              @for (category of game.categories; track category) {
+                <span>{{ category }}</span>
+              }
+            </div>
+          </div>
+
+          @if (game.mechanics?.length) {
+            <div class="game-detail__group">
+              <h3>Mechanics</h3>
+              <div class="game-detail__chips">
+                @for (mechanic of game.mechanics?.slice(0, 8); track mechanic) {
+                  <span>{{ mechanic }}</span>
+                }
+              </div>
+            </div>
+          }
+
+          <footer class="game-detail__meta">
+            @if (game.bggId) {
+              <span>BGG #{{ game.bggId }}</span>
+            }
+            <span>Added {{ formatAddedDate(game) }}</span>
+          </footer>
+        </section>
+      </section>
+    </article>
+  } @else {
+    <section class="game-detail game-detail--empty">
+      <h1>Game not found</h1>
+      <p>This game is not in your vault anymore.</p>
+    </section>
+  }
+</div>

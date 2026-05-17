@@ -1,0 +1,184 @@
+.game-detail {
+  display: grid;
+  gap: 2rem;
+  min-height: 100dvh;
+  padding: clamp(0.5rem, 4vw, 1rem);
+}
+
+.game-detail__hero {
+  align-items: end;
+  background: linear-gradient(0deg, var(--secondary-color) 21%, transparent 100%);
+  border-radius: 1.25rem;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  min-height: clamp(26rem, 54vw, 38rem);
+  overflow: hidden;
+  padding: clamp(1.5rem, 5vw, 4rem);
+  position: relative;
+}
+
+.game-detail__cover {
+  height: 80%;
+  inset: 0;
+  object-fit: cover;
+  opacity: 0.5;
+  position: absolute;
+  width: 100%;
+  z-index: -1;
+  object-position: top;
+}
+
+.game-detail__hero-content,
+.game-detail__actions {
+  position: relative;
+  z-index: 1;
+}
+
+.game-detail__hero-content {
+  max-width: 42rem;
+  margin-bottom: -37px;
+}
+
+.game-detail__tags,
+.game-detail__chips,
+.game-detail__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.game-detail__tags span,
+.game-detail__chips span,
+.game-detail__meta span {
+  background: color-mix(in srgb, var(--secondary-color) 78%, transparent);
+  border-radius: 999rem;
+  color: var(--text-color);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 0.25rem 0.65rem;
+  text-transform: uppercase;
+}
+
+.game-detail h1 {
+  color: var(--primary-color);
+  font-family: var(--font-secondary);
+  font-size: clamp(2rem, 9vw, 4rem);
+  line-height: 0.95;
+  margin-block: 1rem 0.75rem;
+}
+
+.game-detail__hero p {
+  color: var(--text-color);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  max-width: calc(100% - 190px);
+}
+
+.game-detail__actions {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: end;
+}
+
+.game-detail__delete {
+  background: color-mix(in srgb, var(--background-color-secondary) 88%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-color-secondary) 35%, transparent);
+  border-radius: 0.5rem;
+  color: var(--text-color);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.65rem 0.9rem;
+}
+
+.game-detail__content {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: minmax(16rem, 0.8fr) minmax(0, 1.6fr);
+}
+
+.game-detail__stack,
+.game-detail__panel,
+.game-detail__group {
+  display: grid;
+  gap: 1rem;
+}
+
+.game-detail__panel {
+  background: color-mix(in srgb, var(--background-color-secondary) 88%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-color-secondary) 18%, transparent);
+  border-radius: 0.85rem;
+  padding: 1.5rem;
+}
+
+.game-detail__panel h2 {
+  color: var(--primary-color);
+  font-family: var(--font-secondary);
+  font-size: 1.25rem;
+}
+
+.game-detail__panel h3,
+.game-detail__stats dt {
+  color: var(--text-color-tertiary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.game-detail__panel p {
+  color: var(--text-color);
+  font-size: 0.9rem;
+}
+
+.game-detail__stats {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.game-detail__stats dd {
+  color: var(--text-color);
+  font-size: 1.1rem;
+}
+
+.game-detail__stars {
+  color: var(--primary-color);
+  letter-spacing: 0.08em;
+}
+
+.game-detail__panel--wide {
+  align-content: start;
+}
+
+.game-detail__meta {
+  border-top: 1px solid color-mix(in srgb, var(--text-color-secondary) 18%, transparent);
+  padding-top: 1rem;
+}
+
+.game-detail--empty {
+  align-content: center;
+}
+
+@media (max-width: 56rem) {
+  .game-detail__content,
+  .game-detail__hero {
+    grid-template-columns: 1fr;
+  }
+
+  .game-detail__actions {
+    justify-content: start;
+  }
+}
+
+@media (max-width: 40rem) {
+  .game-detail {
+    padding: 1rem;
+  }
+
+  .game-detail__stats {
+    grid-template-columns: 1fr;
+  }
+}

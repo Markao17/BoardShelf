@@ -24,6 +24,8 @@ export interface BggThingDetails {
   imageUrl: string;
   minPlayers: number;
   maxPlayers: number;
+  minDurationMinutes: number | null;
+  maxDurationMinutes: number | null;
   avgDurationMinutes: number;
   categories: string[];
   mechanics: string[];
